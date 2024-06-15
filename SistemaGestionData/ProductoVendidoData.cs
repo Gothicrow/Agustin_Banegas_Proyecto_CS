@@ -35,8 +35,8 @@ namespace SistemaGestionData
                     if (reader.Read())
                     {
                         int productoVendidoId = Convert.ToInt32(reader[0]);
-                        int productId = Convert.ToInt32(reader[1]);
-                        int stock = Convert.ToInt32(reader[2]);
+                        int stock = Convert.ToInt32(reader[1]);
+                        int productId = Convert.ToInt32(reader[2]);
                         int idVenta = Convert.ToInt32(reader[3]);
 
                         ProductoVendido productoVendido = new ProductoVendido(id, productId, stock, idVenta);
