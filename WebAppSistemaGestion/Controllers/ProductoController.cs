@@ -36,8 +36,8 @@ namespace WebAppSistemaGestion.Controllers
         {
             ProductoNegocio.UpdateProducto(producto.Id, producto.Descripcion, producto.Costo, producto.PrecioVenta, producto.Stock, producto.IdUsuario);
         }
-        [HttpDelete(Name = "DeleteProducto")]
-        public void Delete([FromBody] int id)
+        [HttpDelete("{id}")]
+        public void Delete(int id)
         {
             ProductoNegocio.DeleteProducto(id);
         }

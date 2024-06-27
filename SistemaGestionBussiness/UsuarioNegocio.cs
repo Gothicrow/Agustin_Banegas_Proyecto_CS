@@ -18,7 +18,7 @@ namespace SistemaGestionBussiness
         {
             return UsuarioData.GetUsers();
         }
-        public static bool PostUsuario(string nombre, string apellido, string nombreUsuario, string password, string email)
+        public static Usuario PostUsuario(string nombre, string apellido, string nombreUsuario, string password, string email)
         {
             Usuario usuario = new Usuario(nombre, apellido, nombreUsuario, password, email);
             return UsuarioData.CreateUser(usuario);
@@ -31,6 +31,10 @@ namespace SistemaGestionBussiness
         public static bool DeleteUsuario(int id)
         {
             return UsuarioData.DeleteUser(id);
+        }
+        public static Usuario LoginUsuario(Usuario login)
+        {
+            return UsuarioData.LoginUsuario(login);
         }
     }
 }

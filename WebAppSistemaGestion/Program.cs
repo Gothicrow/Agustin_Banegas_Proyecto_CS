@@ -18,6 +18,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors(
+    corsPolicyBuilder =>
+   corsPolicyBuilder.WithOrigins("*")
+  .AllowAnyMethod()
+  .AllowAnyHeader()
+);
+
 app.UseAuthorization();
 
 app.MapControllers();

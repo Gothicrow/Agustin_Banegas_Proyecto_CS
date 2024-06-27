@@ -89,7 +89,7 @@ namespace SistemaGestionData
                 return users;
             }
         }
-        public static bool CreateUser(Usuario usuario)
+        public static Usuario CreateUser(Usuario usuario)
         {
             string connectionString = @"Server=localhost\SQLEXPRESS;Database=SistemaGestion;Trusted_Connection=true";
 
@@ -107,10 +107,34 @@ namespace SistemaGestionData
                     command.Parameters.AddWithValue("Email", usuario.Email);
 
                     conn.Open();
-                    return command.ExecuteNonQuery() > 0;
-                }catch(Exception ex)
+                    if(command.ExecuteNonQuery() > 0)
+                    {
+                        string newQuery = "SELECT * FROM Usuario WHERE NombreUsuario=@nombreUsuario";
+
+                        SqlCommand newCommand = new SqlCommand(newQuery, conn);
+
+                        newCommand.Parameters.AddWithValue("nombreUsuario", usuario.NombreUsuario);
+
+                        SqlDataReader reader = newCommand.ExecuteReader();
+
+                        if (reader.Read())
+                        {
+                            int userId = Convert.ToInt32(reader[0]);
+                            string nombre = reader.GetString(1);
+                            string apellido = reader.GetString(2);
+                            string nombreUsuario = reader.GetString(3);
+                            string password = reader.GetString(4);
+                            string email = reader.GetString(5);
+
+                            Usuario newUsuario = new Usuario(userId, nombre, apellido, nombreUsuario, password, email);
+                            return newUsuario;
+                        }
+                    }
+                    throw new Exception("No fue posible crear el usuario.");
+                }
+                catch(Exception ex)
                 {
-                    return false;
+                    throw new Exception("No fue posible crear el usuario.");
                 }
             }
         }
@@ -158,6 +182,47 @@ namespace SistemaGestionData
                 }catch(Exception ex)
                 {
                     return false;
+                }
+            }
+        }
+        public static Usuario LoginUsuario(Usuario login)
+        {
+            string connectionString = @"Server=localhost\SQLEXPRESS;Database=SistemaGestion;Trusted_Connection=true";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT * FROM Usuario WHERE Mail=@mail";
+                try
+                {
+                    SqlCommand command = new SqlCommand(query, conn);
+
+                    command.Parameters.AddWithValue("mail", login.Email);
+
+                    conn.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        int userId = Convert.ToInt32(reader[0]);
+                        string nombre = reader.GetString(1);
+                        string apellido = reader.GetString(2);
+                        string nombreUsuario = reader.GetString(3);
+                        string password = reader.GetString(4);
+                        string email = reader.GetString(5);
+
+                        Usuario usuario = new Usuario(userId, nombre, apellido, nombreUsuario, password, email);
+
+                        if(usuario.Password == login.Password)
+                        {
+                            usuario.Password = "";
+                            return usuario;
+                        }
+                    }
+                    throw new Exception("El correo o contraseña no son correctos.");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("El correo o contraseña no son correctos.");
                 }
             }
         }

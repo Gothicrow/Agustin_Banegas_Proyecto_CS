@@ -26,17 +26,25 @@ namespace WebAppSistemaGestion.Controllers
             }
         }
         [HttpPost(Name = "CreateUsuario")]
-        public void Post([FromBody] Usuario usuario)
+        public IActionResult Post([FromBody] Usuario usuario)
         {
-            UsuarioNegocio.PostUsuario(usuario.Nombre, usuario.Apellido, usuario.NombreUsuario, usuario.Password, usuario.Email);
+            try
+            {
+                Usuario newUsuario = UsuarioNegocio.PostUsuario(usuario.Nombre, usuario.Apellido, usuario.NombreUsuario, usuario.Password, usuario.Email);
+                return Ok(newUsuario);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpPut(Name = "UpdateUsuario")]
         public void Put([FromBody] Usuario usuario)
         {
             UsuarioNegocio.UpdateUsuario(usuario.Id, usuario.Nombre, usuario.Apellido, usuario.NombreUsuario, usuario.Password, usuario.Email);
         }
-        [HttpDelete(Name = "DeleteUsuario")]
-        public void Delete([FromBody] int id)
+        [HttpDelete("{id}")]
+        public void Delete(int id)
         {
             UsuarioNegocio.DeleteUsuario(id);
         }
